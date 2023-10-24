@@ -7,107 +7,84 @@ function getComputerChoice() {
     } else {
         return "scissor"
     }
-    
-
-    //problem: randomly return rock, paper or scissors
-
-    /*plan: 
-    1. randomly select a number from range 1-3 inclusive
-    2. if number is 1 then return rock
-    3. if number is 2 then return paper
-    4. if number is 3 then return scissor 
-        
-    /*that will randomly return either ‘Rock’, 
-    ‘Paper’ or ‘Scissors’. We’ll use this function 
-    in the game to make the computer’s play. 
-    Tip: use the console to make sure this is 
-    returning the expected output before moving 
-    to the next step! */
 }
 
-function playRound(computerSelection) {
-    const playerSelection = prompt("Enter Rock, Paper or Scissors: ").toLowerCase()
+function playRound(computerSelection, playerSelection) {
+    let text;
+    let result;
     if (playerSelection === computerSelection) {
-        console.log("tie");
-        return "tie";
+        text = "Tie!";
+        result = "tie";
+        return {result , text};
     }
     if (playerSelection === "rock") {
         if (computerSelection === "scissor"){
-            console.log("You Win! Rock beats Scissor");
-            return "win";
+            text = "You Win! Rock beats Scissor";
+            result = "win";
+            return {result , text};
         } else {
-            console.log("You Lose! Paper beats Rock");
-            return "loss";
+            text = "You Lose! Paper beats Rock";
+            result = "loss";
+            return {result , text};
         }
     } else if (playerSelection === "paper") {
         if (computerSelection === "rock"){
-            console.log("You Win! Paper beats Rock");
-            return "win";
+            text = "You Win! Paper beats Rock";
+            result = "win";
+            return {result , text};
         } else {
-            console.log("You Lose! Scissor beats Paper");
-            return "loss";
+            text = "You Lose! Scissor beats Paper";
+            result = "loss"
+            return {result , text};
         }
     } else if (playerSelection === "scissor") {
         if (computerSelection === "paper") {
-            console.log("You Win! Scissor beats Paper");
-            return "win";
+            text = "You Win! Scissor beats Paper";
+            result = "win";
+            return {result , text};
         } else {
-            console.log("You Lose! Rock beats Scissor");
-            return "loss";
+            text = "You Lose! Rock beats Scissor";
+            result = "loss";
+            return {result , text};
         }
     }
-
-
-    //problem: take the players selection and computers selection to find out who won the game
-    /* plan:
-    1. convert playerSelection to lowercase
-    2. if playerSelection is equal to computerSelection return "tie"
-    3. if playerSelection is rock and computerSelection is paper return "You Lose! Paper beats Rock"
-       else if computerSelection is scissor return "You Win! Rock beats Scissor"
-    4. if playerSelection is paper and computerSelection is rock return "You Win! Paper beats Rock"
-       else if computerSelection is scissor return "You Lose! Scissor beats Paper"
-    5. if playerSelection is scissor and computerSelection is rock return "You Lose! Rock beats Scissor"
-       else if computerSelection is paper return "You Lose! Scissor beats Paper"
-
-    */
-
-
-    //return a string that declares the winner of the round 
-    //like so: "You Lose! Paper beats Rock"
 }
 
-function game(round, computer) {
-    let playerWins = 0;
-    let computerWins = 0;
-    for (let i = 1; i <= 5; i++) {
-        computerChoice = computer();
-        theGame = round(computerChoice);
-        if (theGame === "win") {
-            playerWins ++;
-        } else if (theGame === "loss") {
-            computerWins ++;
-        }
-    }
-    if (playerWins == computerWins) {
-        console.log("It's a Tie!");
-        return;
-    } else if (playerWins > computerWins) {
-        console.log("You Won!");
-        return;
+const playerSelection = document.querySelector('#playerSelection')
+const results = document.querySelector('.results');
+const winner = results.querySelector('.winner');
+const userScore = results.querySelector('.userScore');
+const comScore = results.querySelector('.comScore');
+
+
+let user = 0;
+let com = 0;
+playerSelection.addEventListener('click', (e) => {
+    let selection = e.target.textContent;
+    let play = playRound(getComputerChoice(), selection);
+    if (play.result === "win") {
+        user ++;
+        userScore.textContent = `Your Score: ${user}`;
+        comScore.textContent = `Computer Score: ${com}`;
+        winner.textContent = play.text;
+    } else if (play.result === 'loss') {
+        com ++;
+        userScore.textContent = `Your Score: ${user}`;
+        comScore.textContent = `Computer Score: ${com}`;
+        winner.textContent = play.text;
     } else {
-        console.log("You Lost!")
-        return;
+        userScore.textContent = `Your Score: ${user}`;
+        comScore.textContent = `Computer Score: ${com}`;
+        winner.textContent = play.text;
     }
 
-    //problem: play 5 rounds of the game
-
-    /* plan
-    1. for i = 1 to i = 5 output round
-    2. add one to each win the player gets
-    3. add one to each win the computer gets
-    4. nothing if its a tie
-    5. if player has more wins than the computer then print player has won
-    */
-}
-
-game(playRound, getComputerChoice);
+    if (user >= 5) {
+        userScore.remove();
+        comScore.remove();
+        winner.textContent = "You're the Winner!"
+    } else if (com >= 5) {
+        userScore.remove();
+        comScore.remove();
+        winner.textContent = "You Lost!"
+    }
+})
